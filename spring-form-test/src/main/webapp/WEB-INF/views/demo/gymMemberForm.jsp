@@ -45,8 +45,8 @@ label{
 				<form:label path="memberName">이름<span class="req">*</span></form:label>
 			</th>
 			<td>
-				<form:input path="memberName"/>
-				<form:errors path="memberName" cssClass="error"/>
+				<form:input path="memberName" />
+				<form:errors path="memberName" cssClass="error" />
 			</td>
 		</tr>
 		<tr>

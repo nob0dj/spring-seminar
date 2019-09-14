@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.kh</groupId>
-	<artifactId>spring-form-test</artifactId>
+	<artifactId>spring-form-test-for-student</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-form-test</name>
 	<description>Demo project for Spring Boot</description>
