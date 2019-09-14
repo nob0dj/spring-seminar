@@ -32,7 +32,7 @@ label{
 }
 </style>
 <div id="form-container">
-<form:form modelAttribute="gymMember">
+<form>
 	<table>
 		<tr>
 			<th>
@@ -48,7 +48,7 @@ label{
 			</td>
 		</tr>
 	</table>
-</form:form>
+</form>
 </div>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
