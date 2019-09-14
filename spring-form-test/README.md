@@ -229,39 +229,39 @@ spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사
 radiobutton
 * 하나의 radio를 표현함. 
 
-    <tr>
-        <th>성별</th>
-        <td>
-            <form:radiobutton path="gender" value="${gender[0]}"/>
-            <form:label path="gender" for="gender1">남</form:label>
-            <form:radiobutton path="gender" value="${gender[1]}"/>
-            <form:label path="gender" for="gender2">여</form:label>
-        </td>
-    </tr>
+        <tr>
+            <th>성별</th>
+            <td>
+                <form:radiobutton path="gender" value="${gender[0]}"/>
+                <form:label path="gender" for="gender1">남</form:label>
+                <form:radiobutton path="gender" value="${gender[1]}"/>
+                <form:label path="gender" for="gender2">여</form:label>
+            </td>
+        </tr>
 
 radiobuttons
 * items속성으로 전달된 반복가능한 객체를 여러개의 radio로 표현.
 
-    <tr>
-        <th>
-            <form:label path="joinPath">가입경로</form:label>
-        </th>
-        <td>
-            <form:radiobuttons path="joinPath" items="${joinPath }" cssClass="chk"/>
-        </td>
-    </tr>
+        <tr>
+            <th>
+                <form:label path="joinPath">가입경로</form:label>
+            </th>
+            <td>
+                <form:radiobuttons path="joinPath" items="${joinPath }" cssClass="chk"/>
+            </td>
+        </tr>
 
 checkbox
 * 하나의 체크박스(단순 value없고, on그대로 사용하는 경우)를 표현
 
-    <tr>
-        <th>
-            <form:label path="wannaPT">PT신청</form:label>
-        </th>
-        <td>
-            <form:checkbox path="wannaPT"/>
-        </td>
-    </tr>
+        <tr>
+            <th>
+                <form:label path="wannaPT">PT신청</form:label>
+            </th>
+            <td>
+                <form:checkbox path="wannaPT"/>
+            </td>
+        </tr>
 
 checkboxes
 사용자에게 보여질 값과 내부적으로 처리될 값이 다른 경우
@@ -269,14 +269,14 @@ checkboxes
 * itemLabel: 사용자에게 보여질 값
 * itemValue: 내부적으로 처리될 값
 
-    <tr>
-        <th>
-            <form:label path="gymInstructor">PT선생님</form:label>
-        </th>
-        <td>
-            <form:checkboxes path="gymInstructor" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
-        </td>
-    </tr>
+        <tr>
+            <th>
+                <form:label path="gymInstructor">PT선생님</form:label>
+            </th>
+            <td>
+                <form:checkboxes path="gymInstructor" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
+            </td>
+        </tr>
 
 
 
@@ -487,28 +487,28 @@ xml에 선언적 방식으로 빈을 등록할경우는 다음 코드 사용할 
 @com.kh.spring.demo.model.validator.GymMemberValidator
 * supports(): command객체가 현재 등록된 GymMember타입이거나 후손클래스인지 검사하여 boolean을 리턴함.    
 
-    public class GymMemberValidator implements Validator{
+        public class GymMemberValidator implements Validator{
 
-        /**
-    	 * command객체가 현재 등록된 GymMember타입이거나 후손클래스인지 검사하여 boolean을 리턴함.    
-    	 */
-        @Override
-        public boolean supports(Class<?> clazz) {
-            return GymMember.class.isAssignableFrom(clazz);
-        }
-
-        @Override
-        public void validate(Object target, Errors errors) {
-
-            GymMember gymMember = (GymMember)target;
-            if(gymMember.getMemberName().isEmpty()) {
-                //void org.springframework.validation.ValidationUtils.rejectIfEmptyOrWhitespace(Errors errors, String field, String errorCode)
-                //messages.properties에서 errorCode를 키값으로 조회, 해당하는 사용자 피드백메세지를 전송
-                ValidationUtils.rejectIfEmptyOrWhitespace(errors, "memberName", "required.memberName");
+            /**
+            * command객체가 현재 등록된 GymMember타입이거나 후손클래스인지 검사하여 boolean을 리턴함.    
+            */
+            @Override
+            public boolean supports(Class<?> clazz) {
+                return GymMember.class.isAssignableFrom(clazz);
             }
-        }
 
-    }
+            @Override
+            public void validate(Object target, Errors errors) {
+
+                GymMember gymMember = (GymMember)target;
+                if(gymMember.getMemberName().isEmpty()) {
+                    //void org.springframework.validation.ValidationUtils.rejectIfEmptyOrWhitespace(Errors errors, String field, String errorCode)
+                    //messages.properties에서 errorCode를 키값으로 조회, 해당하는 사용자 피드백메세지를 전송
+                    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "memberName", "required.memberName");
+                }
+            }
+
+        }
 
 @src/main/resources/messages.properties
 프로퍼티파일 특성상 한글은 모두 unicode문자로 변환되어 저장된다. mouse hover하면 원래 글자 확인 가능.
@@ -516,9 +516,9 @@ xml에 선언적 방식으로 빈을 등록할경우는 다음 코드 사용할 
 * requiered.phone=전화번호를 입력하세요.
 
 
-    #messages.properties
-    required.memberName=\uD68C\uC6D0\uBA85\uC744 \uC785\uB825\uD558\uC138\uC694.
-    required.phone=\uC804\uD654\uBC88\uD638\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.
+        #messages.properties
+        required.memberName=\uD68C\uC6D0\uBA85\uC744 \uC785\uB825\uD558\uC138\uC694.
+        required.phone=\uC804\uD654\uBC88\uD638\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.
 
 
 
