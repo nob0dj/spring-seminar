@@ -1,8 +1,12 @@
 # Spring-form & Validation
 [https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/spring-form-tld.html](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/spring-form-tld.html)
 
-
 [https://www.baeldung.com/spring-mvc-form-tags](https://www.baeldung.com/spring-mvc-form-tags)
+[https://www.baeldung.com/spring-mvc-form-tutorial](https://www.baeldung.com/spring-mvc-form-tutorial)
+
+
+[스프링프레임워크 <form:form> 태그 사용법](https://offbyone.tistory.com/325)
+[Spring form:form 태그 설명](https://bbiyakbbiyak.tistory.com/1)
 
 
 ## 준비
@@ -39,23 +43,25 @@ spring-form-test 프로젝트 배포
         
     #view:jsp
     spring:
-    mvc:
-        view:
-        prefix: /WEB-INF/views/ 
-        suffix: .jsp
+        mvc:
+            view:
+            prefix: /WEB-INF/views/ 
+            suffix: .jsp
 
     #logging
     logging:
-    level:
-        com.kh.spring: DEBUG
+        level:
+            com.kh.spring: DEBUG
         
 * welcome-file을 사용하기 위한 설정클래스를 추가함.
 
 @com.kh.spring.WelcomFileConfigurator
 springboot에서 welcome-file은 web.xml이 아닌 @Configuration을 통해 처리함.
- 
+`class WelcomeFileConfigurator extends WebMvcConfigurerAdapter`와 같이 WebMvcConfigurerAdapter를 사용하지 말것.(deprecated) 
+`interface WebMvcConfigurer`를 구현한 버젼 적용.
+
     @Configuration
-    public class WelcomeFileConfigurator extends WebMvcConfigurerAdapter{
+    public class WelcomeFileConfigurator implements WebMvcConfigurer{
      
         @Override
         public void addViewControllers(ViewControllerRegistry registry ) {
@@ -173,6 +179,7 @@ spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사
 @com.kh.spring.demo.model.vo.GymInstructor
 
     @Data
+    @NoArgsConstructor
     @AllArgsConstructor
     public class GymInstructor {
         private String code;
@@ -263,7 +270,19 @@ checkbox
             </td>
         </tr>
 
+
 checkboxes
+
+    <tr>
+        <th>
+            <form:label path="interest">관심운동</form:label>
+        </th>
+        <td>
+            <form:checkboxes path="interest" items="${interestList }" cssClass="chk"/>
+        </td>
+    </tr>
+
+
 사용자에게 보여질 값과 내부적으로 처리될 값이 다른 경우
 * items속성으로 전달된 반복가능한 객체를 여러개의 checkbox로 표현.
 * itemLabel: 사용자에게 보여질 값
@@ -278,6 +297,11 @@ checkboxes
             </td>
         </tr>
 
+
+> spring-form에서 checkbox 이용시 _로 시작하는 필드명의 hiddenn input태그(value=on)도 함께 생성된다.
+> 해당 form에서 이 필드가 존재한다는 indicator역할을 하고 있다. checkbox를 아무것도 check하지 않은 경우 대비함이다.
+> 
+> [Spring form checkbox tag: why generate a hidden element?](https://stackoverflow.com/questions/17368168/spring-form-checkbox-tag-why-generate-a-hidden-element)
 
 
 
@@ -506,6 +530,9 @@ xml에 선언적 방식으로 빈을 등록할경우는 다음 코드 사용할 
                     //messages.properties에서 errorCode를 키값으로 조회, 해당하는 사용자 피드백메세지를 전송
                     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "memberName", "required.memberName");
                 }
+
+                if(gymMember.getPhone().isEmpty())
+			        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "required.phone");
             }
 
         }
@@ -551,3 +578,29 @@ validator구현클래스 등록
 		return "redirect:/demo/gymMemberForm.do";//redirect방식 지정
 	}
 
+
+## 커맨드객체(GymMember)의 필드(GymInstructor) 값 적용하기
+![](https://d.pr/i/dZHfjB+)
+
+@/WEB-INF/views/demo/gymMemberForm.jsp
+중첩된 커맨드객체를 사용할때는 input필드의 name속성값을  `name=gymInstructor.code`와 같이 객체구조로 작성하면, 
+스프링컨테이너가 다음을 처리할 수 있다.
+이를 spring-form으로 작성하면, `path="gymInstructor.code"`와 같이 작성한다.
+
+
+    ...
+    <tr>
+        <th>
+            <form:label path="gymInstructor">PT선생님</form:label>
+        </th>
+        <td>
+            <form:radiobuttons path="gymInstructor.code" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
+        </td>
+    </tr>
+    ...
+
+`/demo/gymMemberInsert.do`요청시, 콘솔 확인
+실제 db에서 fk로 사용하는 것은 GymInstructor.code필드뿐이므로 name값은 무시함.
+
+
+    gymMember=GymMember(memberCode=null, memberName=안창호, phone=01012341234, height=null, weight=null, gender=M, wannaPT=false, joinPath=인터넷광고, interest=[], gymInstructor=GymInstructor(code=leess, name=null))

@@ -35,6 +35,7 @@ label{
 <div id="form-container">
 <%-- <form:form></form:form> --%>
 <form:form modelAttribute="gymMember" action="${pageContext.request.contextPath }/demo/gymMemberUpdate.do" method="post">
+	<form:hidden path="memberCode"/>
 	<table>
 		<tr>
 			<th>

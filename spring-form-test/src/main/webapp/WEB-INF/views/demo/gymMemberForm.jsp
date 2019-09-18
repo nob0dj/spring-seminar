@@ -39,6 +39,13 @@ label{
 	<div>
 		<form:errors path="*" cssClass="error"/>
 	</div>
+	
+
+	<!-- <input type="checkbox" name="gymInstructor.code" value="sinsa" />
+	<input type="checkbox" name="gymInstructor.name" value="신사임당" /> -->
+	<%-- <form:checkbox path="gymInstructor.code" value="sinsa"/>
+	<form:checkbox path="gymInstructor.name" value="신사임당"/> --%>
+	
 	<table>
 		<tr>
 			<th>
@@ -112,7 +119,7 @@ label{
 				<form:label path="gymInstructor">PT선생님</form:label>
 			</th>
 			<td>
-				<form:radiobuttons path="gymInstructor" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
+				<form:radiobuttons path="gymInstructor.code" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
 			</td>
 		</tr>
 		<tr>

@@ -112,6 +112,7 @@ public class DemoController {
 	public void gymMemberUpdateForm(@ModelAttribute("gymMember") GymMember gymMember) {
 		
 		//vo 사용자정보 표시하기
+		gymMember.setMemberCode("gm_12345");
 		gymMember.setMemberName("안중근");
 		gymMember.setHeight(188.8);
 		gymMember.setWeight(80.0);
@@ -128,7 +129,7 @@ public class DemoController {
 	}
 	
 	@PostMapping("/gymMemberInsert.do")
-	public String gymMemberInsert(@Valid GymMember gymMember, BindingResult result) {
+	public String gymMemberInsert(GymMember gymMember, BindingResult result) {
 		logger.debug("회원 등록 요청!");
 		logger.debug("gymMember={}",gymMember);
 		
@@ -161,4 +162,5 @@ public class DemoController {
 		logger.debug("회원 등록 성공!");
 		return "redirect:/demo/gymMemberUpdateForm.do";//redirect방식 지정
 	}
+	
 }

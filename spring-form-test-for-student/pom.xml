@@ -43,30 +43,6 @@
 		</dependency>
 		
 		
-		<!-- #1. view:jsp를 이용하기 위한 dependency -->
-		<!-- spring-boot-starter-web도 필요함. -->
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat.embed</groupId>
-			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		<!-- #2. 커맨드객체 유효성검사 @Valid-->
-		<!-- <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.3.1.Final</version>
-        </dependency> -->
-		<dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-        </dependency>
-		
 	</dependencies>
 
 	<build>
