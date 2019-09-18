@@ -580,7 +580,9 @@ validator구현클래스 등록
 
 
 ## 커맨드객체(GymMember)의 필드(GymInstructor) 값 적용하기
-![](https://d.pr/i/dZHfjB+)
+[[Spring] @ModelAttribute 및 중첩 커맨드 객체, Model & ModelAndView](https://engkimbs.tistory.com/694)
+
+![커맨드객체 바인딩에러 view단 확인](https://d.pr/i/dZHfjB+)
 
 @/WEB-INF/views/demo/gymMemberForm.jsp
 중첩된 커맨드객체를 사용할때는 input필드의 name속성값을  `name=gymInstructor.code`와 같이 객체구조로 작성하면, 
@@ -604,3 +606,5 @@ validator구현클래스 등록
 
 
     gymMember=GymMember(memberCode=null, memberName=안창호, phone=01012341234, height=null, weight=null, gender=M, wannaPT=false, joinPath=인터넷광고, interest=[], gymInstructor=GymInstructor(code=leess, name=null))
+
+
