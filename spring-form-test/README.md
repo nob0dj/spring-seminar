@@ -541,9 +541,11 @@ supports(): command객체가 현재 등록된 GymMember타입이거나 후손클
 - `required.memberName=회원명을 입력하세요.`
 - `requiered.phone=전화번호를 입력하세요.`
 
+```
     #messages.properties
     required.memberName=\uD68C\uC6D0\uBA85\uC744 \uC785\uB825\uD558\uC138\uC694.
     required.phone=\uC804\uD654\uBC88\uD638\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.
+```
 
 @com.kh.spring.demo.controller.DemoController 
 
@@ -581,7 +583,7 @@ validator구현클래스 등록
 
 [[Spring] @ModelAttribute 및 중첩 커맨드 객체, Model & ModelAndView](https://engkimbs.tistory.com/694)
 
-[https://d.pr/i/dZHfjB+](https://d.pr/i/dZHfjB+)
+![https://d.pr/i/dZHfjB+](https://d.pr/i/dZHfjB+)
 
 커맨드객체 바인딩에러 view단 확인
 
