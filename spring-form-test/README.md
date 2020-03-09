@@ -1,35 +1,24 @@
 # Spring-form & Validation
-[https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/spring-form-tld.html](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/spring-form-tld.html)
 
-[https://www.baeldung.com/spring-mvc-form-tags](https://www.baeldung.com/spring-mvc-form-tags)
-[https://www.baeldung.com/spring-mvc-form-tutorial](https://www.baeldung.com/spring-mvc-form-tutorial)
+[nob0dj/spring-seminar](https://github.com/nob0dj/spring-seminar.git)
 
+[43. spring-form JSP Tag Library](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/spring-form-tld.html)
 
-[스프링프레임워크 <form:form> 태그 사용법](https://offbyone.tistory.com/325)
-[Spring form:form 태그 설명](https://bbiyakbbiyak.tistory.com/1)
+[Exploring Spring MVC's Form Tag Library | Baeldung](https://www.baeldung.com/spring-mvc-form-tags)
 
+[스프링프레임워크 태그 사용법](https://offbyone.tistory.com/325)
 
-## 준비
-spring-form-test 프로젝트 배포
-* [https://github.com/nob0dj/spring-seminar.git](https://github.com/nob0dj/spring-seminar.git)에서 다운로드
-* import - Existing Maven Project로 workspace에 추가
-* sts에 lombok.jar 설치[eclipse(STS)에 lombok(롬복) 설치](https://countryxide.tistory.com/16)할 것.
-* 2.1.3 springboot version 
-* jsp사용을 위한 의존라이브러리 javax.servlet.jstl, tomcat-embed-jasper 추가, application.yml view관련 설정추가
+# 준비
 
-@pom.xml
+1. spring-form-test 프로젝트 배포 
+    - [`https://github.com/nob0dj/spring-seminar.git`](https://github.com/nob0dj/spring-seminar.git) 에서 zip dowonload | clone repo
+        - zip 다운로드 한경우, import - Existing Maven Project로 workspace에 추가
+        - clone repo한경우, local repo 에서 import projects 하기
+2. eclipse(STS)에 lombok(롬복) 설치할 것. 
 
-    <!-- #1. view:jsp를 이용하기 위한 dependency -->
-    <!-- spring-boot-starter-web도 필요함. -->
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jstl</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-jasper</artifactId>
-        <scope>provided</scope>
-    </dependency>
+    [[lombok] eclipse(STS)에 lombok(롬복) 설치](https://countryxide.tistory.com/16)
+
+3. `2.1.3` springboot version 확인
 
 @src/main/resources/application.yml
 
@@ -47,39 +36,52 @@ spring-form-test 프로젝트 배포
             view:
             prefix: /WEB-INF/views/ 
             suffix: .jsp
-
+    
     #logging
     logging:
         level:
             com.kh.spring: DEBUG
-        
-* welcome-file을 사용하기 위한 설정클래스를 추가함.
 
-@com.kh.spring.WelcomFileConfigurator
+@pom.xml
+
+jsp사용을 위한 의존라이브러리 javax.servlet.jstl, tomcat-embed-jasper 추가, application.yml view관련 설정추가
+
+    <!-- #1. view:jsp를 이용하기 위한 dependency -->
+    <!-- spring-boot-starter-web도 필요함. -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-jasper</artifactId>
+        <scope>provided</scope>
+    </dependency>
+
+@com.kh.spring.WelcomFileConfigurator 
+
+welcome-file을 사용하기 위한 설정클래스를 추가함.
+
 springboot에서 welcome-file은 web.xml이 아닌 @Configuration을 통해 처리함.
-`class WelcomeFileConfigurator extends WebMvcConfigurerAdapter`와 같이 WebMvcConfigurerAdapter를 사용하지 말것.(deprecated) 
-`interface WebMvcConfigurer`를 구현한 버젼 적용.
+
+- `class WelcomeFileConfigurator extends WebMvcConfigurerAdapter`와 같이 WebMvcConfigurerAdapter를 사용하지 말것.(deprecated)
+- `public class WelcomeFileConfigurator implements WebMvcConfigure` 인터페이스 구현한 버젼 적용.
 
     @Configuration
     public class WelcomeFileConfigurator implements WebMvcConfigurer{
      
         @Override
         public void addViewControllers(ViewControllerRegistry registry ) {
-        	//사용자가 / 요청시  자동으로 /index.jsp으로 포워딩해서 처리하도록한다.
+            //사용자가 / 요청시  자동으로 /index.jsp으로 포워딩해서 처리하도록한다.
             registry.addViewController( "/" ).setViewName( "forward:/index.jsp" );
             registry.setOrder( Ordered.HIGHEST_PRECEDENCE );
         }
     }
 
+# spring-form 기본 테스트
 
-
-
-
-
-
-## spring-form 기본 테스트
-spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사용할 수 있다.
-아래 의존을 pom.xml에 추가했다면(springboot 의존 키워드 web선택), 부모 pom.xml에서 spring-webmvc의존이 자동 추가된다.
+- spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사용할 수 있다.
+- springboot 의존 키워드 web선택했다면, 아래와같이  pom.xml에 작성되고, 상속하는 부모 pom.xml에서 spring-webmvc의존이 자동 추가된다.
 
 @pom.xml
 
@@ -88,70 +90,67 @@ spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사
         <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+@/WEB-INF/views/demo/gymMemberForm.jsp 
 
-@/WEB-INF/views/demo/gymMemberForm.jsp
 지시어 directive 태그 추가
 
     <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+    
     ...
-
+    
     <div id="form-container">
         <form:form></form:form>
     </div>
 
-
-결과확인
+결과확인 - 클라이언트 응답 html
 
     <form id="command" action="/springboot/demo/gymMemberForm.do" method="post"></form>
-
-
-
 
 @com.kh.spring.demo.controller.DemoController
 
     /**
-	 * 
-	 * 폼에서 사용할 값을 vo객체(@ModelAttribute)에 등록해둔다.
-	 * 
-	 * @param gymMember
-	 * @param model
-	 */
-	@GetMapping("/gymMemberForm.do")
-	public void gymMemberForm(@ModelAttribute("gymMember") GymMember gymMember, Model model) {
-		
-		//1.성별 radiobutton
-		String[] gender = {"M","F"};
-		
-		//2.가입경로 radiobuttons
-		String[] joinPath = {"인터넷광고", "전단지광고", "지인소개", "기타"};
-		
-		//3.관심운동: checkboxes
-		List<String> interestList = new ArrayList<String>();
-		interestList.add("Pilates");
-		interestList.add("Yoga");
-		interestList.add("Spinning");
-		interestList.add("Jazz Dance");
-		interestList.add("Swing");
-		
-		//4.pt샘: label과 checkbox:value가 다른 경우
-		List<GymInstructor> gymInstructorList = new ArrayList<GymInstructor>();
-		gymInstructorList.add(new GymInstructor("honggd", "홍길동"));
-		gymInstructorList.add(new GymInstructor("sinsa", "신사임당"));
-		gymInstructorList.add(new GymInstructor("leess", "리순신"));	
-		
-		model.addAttribute("gender", gender);
-		model.addAttribute("joinPath", joinPath);
-		model.addAttribute("interestList", interestList);
-		model.addAttribute("gymInstructorList", gymInstructorList);
-		
-	}
+     * 
+     * 폼에서 사용할 값을 vo객체(@ModelAttribute)에 등록해둔다.
+     * 
+     * @param gymMember
+     * @param model
+     */
+    @GetMapping("/gymMemberForm.do")
+    public void gymMemberForm(@ModelAttribute("gymMember") GymMember gymMember, Model model) {
+        
+        //1.성별 radiobutton
+        String[] gender = {"M","F"};
+        
+        //2.가입경로 radiobuttons
+        String[] joinPath = {"인터넷광고", "전단지광고", "지인소개", "기타"};
+        
+        //3.관심운동: checkboxes
+        List<String> interestList = new ArrayList<String>();
+        interestList.add("Pilates");
+        interestList.add("Yoga");
+        interestList.add("Spinning");
+        interestList.add("Jazz Dance");
+        interestList.add("Swing");
+        
+        //4.pt샘: label과 checkbox:value가 다른 경우
+        List<GymInstructor> gymInstructorList = new ArrayList<GymInstructor>();
+        gymInstructorList.add(new GymInstructor("honggd", "홍길동"));
+        gymInstructorList.add(new GymInstructor("sinsa", "신사임당"));
+        gymInstructorList.add(new GymInstructor("leess", "리순신"));   
+        
+        model.addAttribute("gender", gender);
+        model.addAttribute("joinPath", joinPath);
+        model.addAttribute("interestList", interestList);
+        model.addAttribute("gymInstructorList", gymInstructorList);
+        
+    }
 
-@com.kh.spring.demo.model.vo.GymMember
-**기본형이 아닌 참조형으로 필드를 구성한다.**
-빈 vo객체처리시 spring-form이 null을 대입하게 되는데, 기본형은 이를 처리할 수 없다.
-기본형은 wrapper-class로 처리한다.
-    
+@com.kh.spring.demo.model.vo.GymMember 
+
+vo의 필드는 **기본형이 아닌 참조형으로 구성한다.** 
+
+빈 vo객체처리시 spring-form이 null을 대입하게 되는데, 기본형은 이를 처리할 수 없다. 기본형은 wrapper-class로 처리한다.
+
     /**
     * 빈 vo객체처리시 spring-form이 null을 대입하게 되는데, 기본형은 이를 처리할 수 없다.
     * 기본형은 wrapper-class로 처리한다.
@@ -167,14 +166,13 @@ spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사
         private String phone;
         private Double height;
         private Double weight;
-        private String gender;	//성별 radio
+        private String gender;  //성별 radio
         private Boolean wannaPT;//pt여부. checkbox 기본값 true
         private String joinPath;//가입경로 radio
         private String[] interest;//관심있는 운동 checkbox
         private GymInstructor gymInstructor;//pt선생님
         
     }
-
 
 @com.kh.spring.demo.model.vo.GymInstructor
 
@@ -186,92 +184,92 @@ spring-webmvc의존 라이브러리를 추가했다면, spring-form태그를 사
         private String name;
     }
 
+@/WEB-INF/views/demo/gymMemberForm.jsp 
 
+- `modelAttribute` 사용할 vo객체. model에서 참조.
+- `path` vo객체의 field명
+- `cssClass` 클래스값 지정시 사용(복수개 사용가능). class속성 사용시, cssClass값으로 덮어씌워지므로 주의할것.
+- cssStyle: style속성을 직접 기술할 경우 사용.
 
-@/WEB-INF/views/demo/gymMemberForm.jsp
-* modelAttribute: 사용할 vo객체. model에서 참조.
-* path: vo객체의 field명
-* cssClass: 클래스값 지정시 사용(복수개 사용가능). class속성 사용시, cssClass값으로 덮어씌워지므로 주의할것.
-* cssStyle: style속성을 직접 기술할 경우 사용.
-  
-`<form:input>`은 기본적으로 `type=text`임. 그외는 type지정을 직접하면 된다.
-
+`<form:input>`은 기본적으로 `type=text`임. 그외는 직접 type 을 지정하면 된다.
 
     <form:form modelAttribute="gymMember">
-        <table>
-            <tr>
-                <th>
-                    <form:label path="memberName">이름<span class="req">*</span></form:label>
-                </th>
-                <td>
-                    <form:input path="memberName"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <form:label path="phone">전화번호<span class="req">*</span></form:label>
-                </th>
-                <td>
-                    <form:input path="phone"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <form:label path="height">키(cm)</form:label>
-                </th>
-                <td>
-                    <form:input path="height"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <form:label path="weight">몸무게(kg)</form:label>
-                </th>
-                <td>
-                    <form:input path="weight"/>
-                </td>
-            </tr>
-        </form>
-
-radiobutton
-* 하나의 radio를 표현함. 
-
-        <tr>
-            <th>성별</th>
-            <td>
-                <form:radiobutton path="gender" value="${gender[0]}"/>
-                <form:label path="gender" for="gender1">남</form:label>
-                <form:radiobutton path="gender" value="${gender[1]}"/>
-                <form:label path="gender" for="gender2">여</form:label>
-            </td>
-        </tr>
-
-radiobuttons
-* items속성으로 전달된 반복가능한 객체를 여러개의 radio로 표현.
-
+    	<table>
         <tr>
             <th>
-                <form:label path="joinPath">가입경로</form:label>
+                <form:label path="memberName">이름<span class="req">*</span></form:label>
             </th>
             <td>
-                <form:radiobuttons path="joinPath" items="${joinPath }" cssClass="chk"/>
+                <form:input path="memberName"/>
             </td>
         </tr>
-
-checkbox
-* 하나의 체크박스(단순 value없고, on그대로 사용하는 경우)를 표현
-
         <tr>
             <th>
-                <form:label path="wannaPT">PT신청</form:label>
+                <form:label path="phone">전화번호<span class="req">*</span></form:label>
             </th>
             <td>
-                <form:checkbox path="wannaPT"/>
+                <form:input path="phone"/>
             </td>
         </tr>
+        <tr>
+            <th>
+                <form:label path="height">키(cm)</form:label>
+            </th>
+            <td>
+                <form:input path="height"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <form:label path="weight">몸무게(kg)</form:label>
+            </th>
+            <td>
+                <form:input path="weight"/>
+            </td>
+        </tr>
+    </form>
 
+### radiobutton 1
 
-checkboxes
+하나의 radio를 표현함.
+
+    <tr>
+        <th>성별</th>
+        <td>
+            <form:radiobutton path="gender" value="${gender[0]}"/>
+            <form:label path="gender" for="gender1">남</form:label>
+            <form:radiobutton path="gender" value="${gender[1]}"/>
+            <form:label path="gender" for="gender2">여</form:label>
+        </td>
+    </tr>
+
+### radiobutton 2
+
+items속성으로 전달된 반복가능한 객체를 여러개의 radio로 표현.
+
+    <tr>
+        <th>
+            <form:label path="joinPath">가입경로</form:label>
+        </th>
+        <td>
+            <form:radiobuttons path="joinPath" items="${joinPath }" cssClass="chk"/>
+        </td>
+    </tr>
+
+### checkbox 1
+
+하나의 체크박스(단순 value없고, on그대로 사용하는 경우)를 표현
+
+    <tr>
+        <th>
+            <form:label path="wannaPT">PT신청</form:label>
+        </th>
+        <td>
+            <form:checkbox path="wannaPT"/>
+        </td>
+    </tr>
+
+### checkbox 2
 
     <tr>
         <th>
@@ -282,99 +280,100 @@ checkboxes
         </td>
     </tr>
 
+사용자에게 보여질 값과 내부적으로 처리될 값이 다른 경우 
 
-사용자에게 보여질 값과 내부적으로 처리될 값이 다른 경우
-* items속성으로 전달된 반복가능한 객체를 여러개의 checkbox로 표현.
-* itemLabel: 사용자에게 보여질 값
-* itemValue: 내부적으로 처리될 값
+- items속성으로 전달된 반복가능한 객체를 여러개의 checkbox로 표현.
+- itemLabel: 사용자에게 보여질 값
+- itemValue: 내부적으로 처리될 값
 
-        <tr>
-            <th>
-                <form:label path="gymInstructor">PT선생님</form:label>
-            </th>
-            <td>
-                <form:checkboxes path="gymInstructor" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
-            </td>
-        </tr>
+`path="gymInstructor.code"` 로 처리해야 최종 제출될 때, gymInstructor필드타입으로 정상 변환된다. (마지막에 설명 첨부)
 
+    <tr>
+        <th>
+            <form:label path="gymInstructor">PT선생님</form:label>
+        </th>
+        <td>
+            <form:checkboxes path="gymInstructor.code" items="${gymInstructorList}"  itemLabel="name" itemValue="code" cssClass="chk"/>
+        </td>
+    </tr>
 
-> spring-form에서 checkbox 이용시 _로 시작하는 필드명의 hiddenn input태그(value=on)도 함께 생성된다.
-> 해당 form에서 이 필드가 존재한다는 indicator역할을 하고 있다. checkbox를 아무것도 check하지 않은 경우 대비함이다.
-> 
-> [Spring form checkbox tag: why generate a hidden element?](https://stackoverflow.com/questions/17368168/spring-form-checkbox-tag-why-generate-a-hidden-element)
+> spring-form에서 checkbox 이용시 _로 시작하는 필드명의 hiddenn input태그(value=on)도 함께 생성된다. 
+해당 form에서 이 필드가 존재한다는 indicator역할을 하고 있다. 
+checkbox를 아무것도 check하지 않은 경우 대비함이다.
 
+[Spring form checkbox tag: why generate a hidden element?](https://stackoverflow.com/questions/17368168/spring-form-checkbox-tag-why-generate-a-hidden-element)
 
+# 사용자 데이터 기록하기
 
-## 사용자 데이터 기록하기
 임의의 사용자 데이터를 폼에 기록하기.
-
 
 @com.kh.spring.demo.controller.DemoController
 
     /**
-	 * 폼에서 사용할 값을 vo객체(@ModelAttribute)에 등록해둔다.
-	 * 
-	 * @param gymMember
-	 * @param model
-	 */
-	@GetMapping("/gymMemberUpdateForm.do")
-	public void gymMemberUpdateForm(@ModelAttribute("gymMember") GymMember gymMember) {
-		
-		//vo 사용자정보 표시하기
-		gymMember.setMemberName("안중근");
-		gymMember.setHeight(188.8);
-		gymMember.setWeight(80.0);
-		gymMember.setPhone("01012341234");
-		gymMember.setGender("M");
-		gymMember.setJoinPath("지인소개");
-		//pt신청여부: checkbox(checked처리하기)
-		gymMember.setWannaPT(true);
-		//Yoga, Swing을 checked처리하기
-		gymMember.setInterest(new String[] {"Yoga", "Swing"});
-		//leess를 checked처리하기
-		gymMember.setGymInstructor(new GymInstructor("leess", "리순신"));
-		
-	}
+     * 폼에서 사용할 값을 vo객체(@ModelAttribute)에 등록해둔다.
+     * 
+     * @param gymMember
+     * @param model
+     */
+    @GetMapping("/gymMemberUpdateForm.do")
+    public void gymMemberUpdateForm(@ModelAttribute("gymMember") GymMember gymMember) {
+        
+        //vo 사용자정보 표시하기
+        gymMember.setMemberName("안중근");
+        gymMember.setHeight(188.8);
+        gymMember.setWeight(80.0);
+        gymMember.setPhone("01012341234");
+        gymMember.setGender("M");
+        gymMember.setJoinPath("지인소개");
+        //pt신청여부: checkbox(checked처리하기)
+        gymMember.setWannaPT(true);
+        //Yoga, Swing을 checked처리하기
+        gymMember.setInterest(new String[] {"Yoga", "Swing"});
+        //leess를 checked처리하기
+        gymMember.setGymInstructor(new GymInstructor("leess", "리순신"));
+        
+    }
 
-기존 form작성관련 속성을 공유하기위하여 별도의 @ModelAttribute메소드를 생성함.
+기존 form작성관련 속성을 공유하기위하여 별도의 @ModelAttribute메소드를 생성함. 
 
-    
-	/**
-	 * DemoController의 모든 요청에서 model속성으로 참조할 수 있도록 @ModelAttribute로 선언함.
-	 * 
-	 * @param model
-	 */
-	@ModelAttribute
-	public void common(Model model){
-		//1.성별 radiobutton
-		String[] gender = {"M","F"};
-		
-		//2.가입경로 radiobuttons
-		String[] joinPath = {"인터넷광고", "전단지광고", "지인소개", "기타"};
-		
-		//3.관심운동: checkboxes
-		List<String> interestList = new ArrayList<String>();
-		interestList.add("Pilates");
-		interestList.add("Yoga");
-		interestList.add("Spinning");
-		interestList.add("Jazz Dance");
-		interestList.add("Swing");
-		
-		//4.pt샘: label과 checkbox:value가 다른 경우
-		List<GymInstructor> gymInstructorList = new ArrayList<GymInstructor>();
-		gymInstructorList.add(new GymInstructor("honggd", "홍길동"));
-		gymInstructorList.add(new GymInstructor("sinsa", "신사임당"));
-		gymInstructorList.add(new GymInstructor("leess", "리순신"));	
-		
-		model.addAttribute("gender", gender);
-		model.addAttribute("joinPath", joinPath);
-		model.addAttribute("interestList", interestList);
-		model.addAttribute("gymInstructorList", gymInstructorList);
-		
-	}
+@ModelAttribute메소드는 controller내 모든 handler에 적용되므로 모든 request에서 사용할 수 있다.
 
+    /**
+     * DemoController의 모든 요청에서 model속성으로 참조할 수 있도록 @ModelAttribute로 선언함.
+     * 
+     * @param model
+     */
+    @ModelAttribute
+    public void common(Model model){
+        //1.성별 radiobutton
+        String[] gender = {"M","F"};
+        
+        //2.가입경로 radiobuttons
+        String[] joinPath = {"인터넷광고", "전단지광고", "지인소개", "기타"};
+        
+        //3.관심운동: checkboxes
+        List<String> interestList = new ArrayList<String>();
+        interestList.add("Pilates");
+        interestList.add("Yoga");
+        interestList.add("Spinning");
+        interestList.add("Jazz Dance");
+        interestList.add("Swing");
+        
+        //4.pt샘: label과 checkbox:value가 다른 경우
+        List<GymInstructor> gymInstructorList = new ArrayList<GymInstructor>();
+        gymInstructorList.add(new GymInstructor("honggd", "홍길동"));
+        gymInstructorList.add(new GymInstructor("sinsa", "신사임당"));
+        gymInstructorList.add(new GymInstructor("leess", "리순신"));   
+        
+        model.addAttribute("gender", gender);
+        model.addAttribute("joinPath", joinPath);
+        model.addAttribute("interestList", interestList);
+        model.addAttribute("gymInstructorList", gymInstructorList);
+        
+    }
 
-@/WEB-INF/views/demo/gymMemberUpdateForm.jsp
+@/WEB-INF/views/demo/gymMemberUpdateForm.jsp 
+
 기존 gymMemberForm.jsp와 동일하므로 복사 붙여넣기 후 파일명 변경할 것.
 
     <div id="form-container">
@@ -464,16 +463,13 @@ checkboxes
         </form:form>
     </div>
 
+# 유효성검사 및 error
 
-
-
-
-## 유효성검사 및 error
 클라이언트단 유효성 검사는 생략하고, 폼을 제출하여, 서버단 유효성 검사를 진행한다.
 
+@pom.xml 
 
-@pom.xml
-org.hibernate.hibernate-validator 나 javax.validation.validation-api 택일하여 의존라이브러리 추가
+`org.hibernate.hibernate-validator` 나 `javax.validation.validation-api` 택일하여 의존라이브러리 추가
 
     <!-- #2. 커맨드객체 유효성검사 @Valid-->
     <!-- <dependency>
@@ -487,13 +483,13 @@ org.hibernate.hibernate-validator 나 javax.validation.validation-api 택일하�
         <version>2.0.1.Final</version>
     </dependency>
 
+@com.kh.spring.SpringFormConfigurator 
 
-@com.kh.spring.SpringFormConfigurator
 validator구현클라스에서 필드별 에러코드에 해당하는 message를 바인딩 해주기 위한 빈 등록
-    
+
     @Configuration
     public class SpringFormConfigurator {
-
+    
         @Bean
         public MessageSource messageSource() {
             ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -502,17 +498,18 @@ validator구현클라스에서 필드별 에러코드에 해당하는 message를
         }
     }
 
-xml에 선언적 방식으로 빈을 등록할경우는 다음 코드 사용할 것.
+> xml에 선언적 방식으로 빈을 등록할경우는 다음 코드 사용할 것.
 
     <bean class="org.springframework.context.support.ResourceBundleMessageSource" id="messageSource">
         <property name="basename" value="messages" />
     </bean>
 
-@com.kh.spring.demo.model.validator.GymMemberValidator
-* supports(): command객체가 현재 등록된 GymMember타입이거나 후손클래스인지 검사하여 boolean을 리턴함.    
+@com.kh.spring.demo.model.validator.GymMemberValidator 
 
-        public class GymMemberValidator implements Validator{
+supports(): command객체가 현재 등록된 GymMember타입이거나 후손클래스인지 검사하여 boolean을 리턴함.
 
+    public class GymMemberValidator implements Validator{
+    
             /**
             * command객체가 현재 등록된 GymMember타입이거나 후손클래스인지 검사하여 boolean을 리턴함.    
             */
@@ -520,75 +517,77 @@ xml에 선언적 방식으로 빈을 등록할경우는 다음 코드 사용할 
             public boolean supports(Class<?> clazz) {
                 return GymMember.class.isAssignableFrom(clazz);
             }
-
+    
             @Override
             public void validate(Object target, Errors errors) {
-
+    
                 GymMember gymMember = (GymMember)target;
                 if(gymMember.getMemberName().isEmpty()) {
                     //void org.springframework.validation.ValidationUtils.rejectIfEmptyOrWhitespace(Errors errors, String field, String errorCode)
                     //messages.properties에서 errorCode를 키값으로 조회, 해당하는 사용자 피드백메세지를 전송
                     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "memberName", "required.memberName");
                 }
-
+    
                 if(gymMember.getPhone().isEmpty())
-			        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "required.phone");
+                    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "required.phone");
             }
-
+    
         }
 
-@src/main/resources/messages.properties
-프로퍼티파일 특성상 한글은 모두 unicode문자로 변환되어 저장된다. mouse hover하면 원래 글자 확인 가능.
-* required.memberName=회원명을 입력하세요.
-* requiered.phone=전화번호를 입력하세요.
+@src/main/resources/messages.properties 
 
+프로퍼티파일 특성상 한글은 모두 unicode문자로 변환되어 저장된다. mouse hover하면 원래 글자 확인 가능. 
 
-        #messages.properties
-        required.memberName=\uD68C\uC6D0\uBA85\uC744 \uC785\uB825\uD558\uC138\uC694.
-        required.phone=\uC804\uD654\uBC88\uD638\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.
+- `required.memberName=회원명을 입력하세요.`
+- `requiered.phone=전화번호를 입력하세요.`
 
+    #messages.properties
+    required.memberName=\uD68C\uC6D0\uBA85\uC744 \uC785\uB825\uD558\uC138\uC694.
+    required.phone=\uC804\uD654\uBC88\uD638\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.
 
+@com.kh.spring.demo.controller.DemoController 
 
-@com.kh.spring.demo.controller.DemoController
 validator구현클래스 등록
 
     /**
-	 * @InitBinder
-	 * WebDataBinder(사용자 요청을 자바빈으로 바인딩함)객체 초기화 목적의 어노테이션
-	 */
-	@InitBinder
+     * @InitBinder
+     * WebDataBinder(사용자 요청을 자바빈으로 바인딩함)객체 초기화 목적의 어노테이션
+     */
+    @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setValidator(new GymMemberValidator());
     }
 
-`@Valid` 어노테이션을 사용하면, 스프링컨테이너가 유효성검사 진행후, 결과를 `BindingResult result` 파라미터에 담아준다. 
-이를 체크 `result.hasErrors()`하여 분기 처리함.
-
+`@Valid` 어노테이션을 사용하면, 스프링컨테이너가 유효성검사 진행후, 결과를 `BindingResult result` 파라미터에 담아준다. 이를 체크 `result.hasErrors()`하여 분기 처리함.
 
     @PostMapping("/gymMemberInsert.do")
-	public String gymMemberInsert(@Valid GymMember gymMember, BindingResult result) {
-		logger.debug("회원 등록 요청!");
-		logger.debug("gymMember={}",gymMember);
-		
-		if(result.hasErrors()) {
-			return "demo/gymMemberForm";//forward방식 지정.
-		}
-		
-		logger.debug("회원 등록 성공!");
-		return "redirect:/demo/gymMemberForm.do";//redirect방식 지정
-	}
+    public String gymMemberInsert(@Valid GymMember gymMember, BindingResult result) {
+        logger.debug("회원 등록 요청!");
+        logger.debug("gymMember={}",gymMember);
+        
+        if(result.hasErrors()) {
+            return "demo/gymMemberForm";//forward방식 지정.
+        }
+        
+        logger.debug("회원 등록 성공!");
+        return "redirect:/demo/gymMemberForm.do";//redirect방식 지정
+    }
 
+---
+
+# #issues
 
 ## 커맨드객체(GymMember)의 필드(GymInstructor) 값 적용하기
+
 [[Spring] @ModelAttribute 및 중첩 커맨드 객체, Model & ModelAndView](https://engkimbs.tistory.com/694)
 
-![커맨드객체 바인딩에러 view단 확인](https://d.pr/i/dZHfjB+)
+[https://d.pr/i/dZHfjB+](https://d.pr/i/dZHfjB+)
 
-@/WEB-INF/views/demo/gymMemberForm.jsp
-중첩된 커맨드객체를 사용할때는 input필드의 name속성값을  `name=gymInstructor.code`와 같이 객체구조로 작성하면, 
-스프링컨테이너가 다음을 처리할 수 있다.
-이를 spring-form으로 작성하면, `path="gymInstructor.code"`와 같이 작성한다.
+커맨드객체 바인딩에러 view단 확인
 
+@/WEB-INF/views/demo/gymMemberForm.jsp 
+
+중첩된 커맨드객체를 사용할때는 input필드의 name속성값을 `name=gymInstructor.code`와 같이 객체구조로 작성하면, 스프링컨테이너가 다음을 처리할 수 있다. 이를 spring-form으로 작성하면, `path="gymInstructor.code"`와 같이 작성한다.
 
     ...
     <tr>
@@ -601,10 +600,8 @@ validator구현클래스 등록
     </tr>
     ...
 
-`/demo/gymMemberInsert.do`요청시, 콘솔 확인
+`/demo/gymMemberInsert.do`요청시, 콘솔 확인 
+
 실제 db에서 fk로 사용하는 것은 GymInstructor.code필드뿐이므로 name값은 무시함.
 
-
     gymMember=GymMember(memberCode=null, memberName=안창호, phone=01012341234, height=null, weight=null, gender=M, wannaPT=false, joinPath=인터넷광고, interest=[], gymInstructor=GymInstructor(code=leess, name=null))
-
-

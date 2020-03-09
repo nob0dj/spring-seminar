@@ -3,7 +3,7 @@ package com.kh.spring;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * springboot에서 welcome-file은 web.xml이 아닌 @Configuration을 통해 처리함.
@@ -13,7 +13,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  *
  */
 @Configuration
-public class WelcomeFileConfigurator extends WebMvcConfigurerAdapter{
+//public class WelcomeFileConfigurator extends WebMvcConfigurerAdapter{
+public class WelcomeFileConfigurator implements WebMvcConfigurer{
  
     @Override
     public void addViewControllers(ViewControllerRegistry registry ) {

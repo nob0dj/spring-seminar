@@ -33,6 +33,11 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav mr-auto">
 			      <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}">Home</a></li>
+			      <li class="nav-item">
+			      	<a class="nav-link" href="https://github.com/nob0dj/spring-seminar/tree/master/spring-form-test" title="github소스보기">
+			      		<img src="https://d.pr/i/ngKs9j+" width="16" alt="github이미지" />
+			      	</a>
+			      </li>		
 			      <!-- 데모메뉴 DropDown변경 -->
 				  <!--https://getbootstrap.com/docs/4.1/components/navbar/#supported-content-->
 				  <li class="nav-item dropdown">
