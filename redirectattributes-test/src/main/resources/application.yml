@@ -1,0 +1,14 @@
+# application.yml
+
+#port
+server:  port: 10090
+  
+#contextpath
+  servlet:    context-path: /spring 
+#1.1 jsp configuration
+spring:
+  mvc:    view:      prefix: /WEB-INF/views/      suffix: .jsp
+
+#logginglogging:  level:
+    com.kh.spring: DEBUG
+
