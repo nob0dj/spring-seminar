@@ -65,7 +65,7 @@ function displayResultTable(data){
 	      <option value="jp">일식</option>
 	    </select>
 	</div>
-	<div class="result" id="menuType-result"></div>
+	<div class="result" id="type-result"></div>
 	
 	<script>
 	$(function(){
