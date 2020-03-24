@@ -66,7 +66,6 @@ public class MenuController {
 		String msg  = menuService.insertMenu(menu)>0?"메뉴입력 성공":"메뉴입력 실패";
 		
 		//리턴타입도 json변환가능한 map 전송함.
-		//String 전송하면 에러! -> 클라이언트에서 json parse error!
 		Map<String,String> map = new HashMap<>();
 		map.put("msg", msg);
 		return map;
@@ -90,7 +89,6 @@ public class MenuController {
 		String msg  = menuService.updateMenu(menu)>0?"메뉴수정 성공":"메뉴수정 실패";
 		
 		//리턴타입도 json변환가능한 map 전송함.
-		//String 전송하면 에러! -> 클라이언트에서 json parse error!
 		Map<String,String> map = new HashMap<>();
 		map.put("msg", msg);
 		return map;
@@ -102,8 +100,8 @@ public class MenuController {
 		log.info("삭제할 메뉴번호 : "+id);	
 		
 		String msg  = menuService.deleteMenu(id)>0?"메뉴삭제 성공":"메뉴삭제 실패";
+		
 		//리턴타입도 json변환가능한 map 전송함.
-		//String 전송하면 에러! -> 클라이언트에서 json parse error!
 		Map<String,String> map = new HashMap<>();
 		map.put("msg", msg);
 		return map;
