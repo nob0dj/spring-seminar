@@ -249,33 +249,3 @@ select * from chat_log;
 select * from chat_room;
 select * from chat_member;
 select * from member;
-delete from chat_room where id = 2;
------------------------------------------------------------------------------------------------------
-CREATE TABLE "SPRING"."CHATROOM" 
-(
-    "CHAT_ID" CHAR(20 BYTE), 
-    "MEMBERID" VARCHAR2(256 BYTE) NOT NULL ENABLE, 
-    "LASTCHECK" NUMBER DEFAULT 0, 
-    "STATUS" CHAR(1 BYTE) DEFAULT 'Y' NOT NULL ENABLE, 
-    "STARTDATE" DATE DEFAULT sysdate, 
-    "ENDDATE" DATE, 
-    CONSTRAINT "CK_CHATROOM_STATUS" CHECK (status in('Y','N')) ENABLE, 
-    CONSTRAINT "PK_CHATROOM" PRIMARY KEY ("CHATID","MEMBERID")
-);
-
-
-CREATE TABLE "SPRING"."CHATLOG"     
-(	
-    "CHATNO" NUMBER, 
-    "CHATID" CHAR(20 BYTE) NOT NULL, 
-    "MEMBERID" VARCHAR2(256 BYTE), 
-    "MSG" VARCHAR2(2000 BYTE), 
-    "TIME" NUMBER NOT NULL, 
-    CONSTRAINT "PK_CHATLOG" PRIMARY KEY ("CHATNO"),
-    CONSTRAINT "FK_CHATID_MEMBERID" FOREIGN KEY ("CHATID","MEMBERID")
-                                    REFERENCES "SPRING"."CHATROOM" ("CHATID","MEMBERID")
-);
-
-CREATE SEQUENCE SEQ_CHATLOG;
-
-select * from chatroom;
