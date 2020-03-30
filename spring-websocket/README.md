@@ -63,6 +63,3 @@
 
 [SimpMessagingTemplate](https://www.notion.so/SimpMessagingTemplate-17ec2ad7d1ff4c52b1cf6b459d8250cf)
 
-# See Also
-
-[STOMP - Web Socket(1)](http://minjoon.com/spring-stomp)
