@@ -1,0 +1,35 @@
+@CHARSET "UTF-8";
+body {font-family:"?��먼모?��T";}
+div, section, header, aside, footer {padding:10px;}
+
+/********** ?��체컨?��?��?�� **********/
+div#container	{}
+
+/********** header **********/
+header div#header-container {height:100px;}
+header div#header-container h2 	{margin:30px 10px 0px 10px;}
+
+
+/********** content **********/
+section#content		{min-height:600px;}
+
+/* spring logo png */
+section#content img#center-image {
+    display:  block;
+    margin: 100px auto;
+}
+
+/* chat */
+#chat-container{
+	margin: 0 auto;
+	padding: 10px;
+}
+#msg-container {	
+	height: 600px;
+	overflow-y: scroll;
+}
+
+
+/********** footer **********/
+footer		{background-color:#f8f9fa; background-clip:content-box; clear:both; height:95px; text-align:center;}
+footer p 	{margin-top:30px;}

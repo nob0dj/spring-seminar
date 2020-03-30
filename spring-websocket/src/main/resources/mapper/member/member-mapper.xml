@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="member">
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO 
+			MEMBER (
+				MEMBER_ID, 
+				PASSWORD, 
+				MEMBER_NAME, 
+				GENDER, 
+				BIRTHDAY, 
+				EMAIL, 
+				PHONE, 
+				ADDRESS, 
+				HOBBY, 
+				ENROLLDATE)
+		VALUES(
+			#{memberId},
+			#{password},
+			#{memberName},
+		   	#{gender},
+		   	#{birthDay},
+		   	#{email},
+		   	#{phone},
+		   	#{address},
+		   	#{hobby, typeHandler=strArrTypeHandler},
+		   	sysdate
+		)
+	</insert>
+	
+	<resultMap type="member" id="memberMap">
+		<result column="hobby" property="hobby" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+		
+	<select id="selectOneMember" resultMap="memberMap">
+		SELECT 
+			* 
+		FROM 
+			MEMBER 
+		WHERE 
+			MEMBER_ID = #{memberId}
+	</select>
+	
+	<update id="updateMember">
+		UPDATE 
+			MEMBER 
+		SET 
+			MEMBER_NAME=#{memberName}, 
+			GENDER=#{gender}, 
+			BIRTHDAY=#{birthDay}, 
+			EMAIL=#{email}, 
+			PHONE=#{phone}, 
+			ADDRESS=#{address}, 
+			HOBBY=#{hobby, typeHandler=strArrTypeHandler} 
+		WHERE 
+			MEMBER_ID=#{memberId}
+	</update>
+	
+	<select id="checkIdDuplicate" resultType="_int">
+		SELECT 
+			COUNT(*) AS CNT 
+		FROM 
+			MEMBER 
+		WHERE 
+			MEMBER_ID = #{memberId}
+	</select>
+</mapper>

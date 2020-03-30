@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- properties파일 사용하기 : namespace충돌을 방지하기 위해 키값에 jdbc사용 (없다면, invalid username/password 오류남) -->
+	<context:property-placeholder location="classpath:datasource.properties"/>
+	
+	<!-- #6.1. myBatis(JDBC) -->
+	<!-- log4jdbc-remix : dataSource -->
+    <!-- proxyDataSource using realDataSource -->
+    <bean id="realDatasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${datasource.driver}" />
+        <property name="url" value="${datasource.url}"/>
+        <property name="username" value="${datasource.username}"/>
+        <property name="password" value="${datasource.password}"/>
+    </bean>
+    <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">  
+        <constructor-arg ref="realDatasource" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">    
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="[SQL] " />
+            </bean>
+        </property>
+    </bean>
+    
+	<!-- #6.2. myBatis(JDBC) : SqlSessionFactory-->
+	<!-- RefreshableSqlSessionFactory : reload form mapper.xml --> 
+	<bean id="sqlSessionFactoryBean" 
+		  class="com.kh.spring.common.sql.RefreshableSqlSessionFactoryBean"
+		  p:dataSource-ref="dataSource"
+		  p:mapperLocations="classpath*:mapper/**/*.xml"
+		  p:configLocation="classpath:mybatis-config.xml"/>
+	
+	<!-- #6.3. SqlSessionTemplate -->
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactoryBean"/>
+	</bean>
+	
+	<!-- #11. TransactionManager -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- #11.1. @Transactional method : Register Transaction Advice -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+	
+    
+    <!-- #11.2 선언적 Transaction -->
+	<!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="select*" rollback-for="Exception" read-only="true"/>
+			<tx:method name="insert*" rollback-for="Exception"/>
+			<tx:method name="update*" rollback-for="Exception"/>
+			<tx:method name="delete*" rollback-for="Exception"/>
+		</tx:attributes>
+	</tx:advice> -->
+	
+	<!-- #11.2 선언적 Transaction : Register aop pointcut, advice -->
+	<!-- <aop:config proxy-target-class="true">
+		<aop:pointcut id="serviceMethod" expression="execution(* com.kh.spring..*ServiceImpl.*(..)))"/>
+		<aop:advisor id="transactionAdvisor" advice-ref="txAdvice" pointcut-ref="serviceMethod"/>
+	</aop:config> -->
+	
+    
+</beans>

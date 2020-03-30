@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="stomp">
+	<select id="findChatIdByMemberId" resultType="string">
+		select 
+		    chat_id
+		from 
+		    chat_view
+		where
+		    cr_enabled = 'Y'
+		  and 
+		    cm_enabled = 'Y'
+		  and
+		    member_id = #{memberId}
+	</select>
+	
+	<select id="selectOneChatId" resultType="string">
+		select 
+			chat_id
+		from
+			chat_view
+		where
+			chat_id = #{chatId}
+	</select>
+	
+	<insert id="insertChatRoom">
+		insert into
+		    chat_room 
+		        (id, chat_id)
+		values(
+		    seq_chat.nextval, 
+		    #{chatId}
+		)
+		<selectKey order="AFTER" keyProperty="id" resultType="_long">
+			select 
+				seq_chat.currval
+			from
+				dual
+		</selectKey>
+	</insert>
+	
+	<insert id="insertChatMember">
+		insert into
+		    chat_member
+		        (id, chat_room_id, member_id)
+		
+		values(
+		    seq_chat.nextval,
+		    #{chatRoom.id},
+		    #{memberId}
+		)
+	</insert>
+	
+	<insert id="insertChatLog">
+		insert into 
+		    chat_log 
+		        (id, chat_room_id, member_id, msg, time)
+		values(
+		    seq_chat.nextval, 
+			(select id from chat_room where chat_id = #{chatId}), 
+			#{memberId}, 
+			#{msg}, 
+			#{time}
+		)
+	</insert>
+	
+	
+	<select id="findRecentList" resultType="map">
+		select 
+		    *
+		from (
+		    select 
+		        id,
+		        cv.cr_id,
+		        cv.chat_id,
+		        (select member_id from chat_view where cr_id = cl.chat_room_id and member_id != 'admin') member_id,
+		        cl.msg,
+		        cl.time,
+		        count(*) over(partition by cl.chat_room_id,cl.member_id) cnt,
+		        rank() over(partition by cl.chat_room_id order by time desc) rank 
+		    from 
+		        chat_log cl
+		      left join
+		        chat_view cv
+		          on cl.chat_room_id = cv.cr_id and cl.member_id = cv.member_id
+		    where 
+		        time > (select last_check from chat_view where cr_id = cl.chat_room_id and member_id = 'admin')
+		    order by
+		        time desc
+		    )
+		where 
+		    rank = 1
+		union all 
+		select 
+		    *
+		from (
+		    select 
+		        id,
+		        cv.cr_id,
+		        cv.chat_id,
+		        (select member_id from chat_view where cr_id = cl.chat_room_id and member_id != 'admin') member_id,
+		        cl.msg,
+		        cl.time,
+		        0 cnt,
+		        rank() over(partition by cl.chat_room_id order by time desc) rank 
+		    from 
+		        chat_log cl
+		      left join
+		        chat_view cv
+		          on cl.chat_room_id = cv.cr_id and cl.member_id = cv.member_id
+		    order by 
+		        time desc
+		    ) A
+		where 
+		    rank = 1 
+		  and 
+		    time <![CDATA[ <= ]]> (select last_check from chat_view where cr_id = A.cr_id and member_id = 'admin')
+	</select>
+	
+	<select id="findChatListByChatId" resultType="msg">
+		select 
+		    * 
+		from 
+		    chat_log
+		where 
+		    chat_room_id = (select id from chat_room where chat_id = #{chatId})
+		order by 
+		    id
+	</select>
+	
+	
+	<update id="updateLastCheck">
+		update 
+		    chat_member
+		set 
+		    last_check =  #{time}
+		where 
+		    chat_room_id = (select id from chat_room where chat_id = #{chatId})
+		  and 
+		    member_id = #{memberId}
+	</update>
+	
+	<update id="deleteChatRoom">
+		UPDATE 
+			CHATROOM 
+		SET 
+			STATUS = 'N', 
+			ENDDATE = SYSDATE
+		WHERE 
+			CHATID = #{chatId}
+	</update>
+</mapper>
