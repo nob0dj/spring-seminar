@@ -41,12 +41,12 @@ $(()=>{
  */
 function subscribeByPage(){
 	//페이지별로 구독신청 처리
-	let conntionDone = false;
+	let connectionDone = false;
 	let intervalId = setInterval(()=>{
-		if(conntionDone == true)
+		if(connectionDone == true)
 			clearInterval(intervalId);
 		
-		if(conntionDone==false && stompClient.connected){
+		if(connectionDone==false && stompClient.connected){
 			
 			// subscribe message
 	        stompClient.subscribe('/chat/admin/push', function(message) {
@@ -55,7 +55,7 @@ function subscribeByPage(){
 	            location.reload();
 
 	        });
-			conntionDone = true;
+			connectionDone = true;
 		}	
 	},1000);
 }

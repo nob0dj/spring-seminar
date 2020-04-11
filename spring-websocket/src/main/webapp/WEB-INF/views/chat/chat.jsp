@@ -34,16 +34,16 @@ const chatId = '${chatId}';
  * 각 페이지에서 작성하면, chat.js의 onload함수에서 호출함.
 * chat페이지에서 추가적으로 subscripe 한다.
 * 웹소켓 connection이 맺어지기 전 요청을 방지하기 위해 stompClient.connected를 체크한다.
-* conntionDone 으로 구독요청 완료를 체크해서 1초마다 반복적으로 구독요청한다.
+* connectionDone 으로 구독요청 완료를 체크해서 1초마다 반복적으로 구독요청한다.
 */
 function chatSubscribe(){
 	//페이지별로 구독신청 처리
-	let conntionDone = false;
+	let connectionDone = false;
 	let intervalId = setInterval(()=>{
-		if(conntionDone == true)
+		if(connectionDone == true)
 			clearInterval(intervalId);
 		
-		if(conntionDone==false && stompClient.connected){
+		if(connectionDone==false && stompClient.connected){
 			
 			//stomp에서는 구독개념으로 세션을 관리한다. 핸들러 메소드의 @SendTo어노테이션과 상응한다.
 			stompClient.subscribe('/chat/'+chatId, function(message) {
@@ -52,7 +52,7 @@ function chatSubscribe(){
 				$("#data").append("<li class=\"list-group-item\">"+messsageBody.memberId+" : "+messsageBody.msg+ "</li>");
 				scrollTop();
 			});
-			conntionDone = true;
+			connectionDone = true;
 		}	
 	},1000);
 }
